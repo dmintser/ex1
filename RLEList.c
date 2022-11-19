@@ -1,14 +1,13 @@
 #include "RLEList.h"
-#include <stdlib.h>
 
-void last(RLEList list);
+RLEList last(RLEList list);
 
 struct RLEList_t
 {
     char letter;
     int size;
     struct RLEList_t* next;
-} *RLEList;
+};
 
 //implement the functions here
 
@@ -37,7 +36,11 @@ void RLEListDestroy(RLEList list)
 
 RLEList last(RLEList list)
 {
-    RLEList last=NULL;
+    if(!list)
+        return NULL;
+    if(!list->next)
+        return list;
+    RLEList last;
     while(list->next)
     {
         last=list;
@@ -48,17 +51,18 @@ RLEList last(RLEList list)
 }
 RLEListResult RLEListAppend(RLEList list, char value)
 {
-    if(list==NULL||value==NULL)
+    if(list==NULL)
         return RLE_LIST_NULL_ARGUMENT;
-    RLEList last = last(list);
-    if(value==last->letter)
-        (last->size)++;
+    RLEList l = last(list);
+    if(value==(l->letter))
+        (l->size)++;
     else
     {
         RLEList new_Node = malloc(sizeof(*new_Node));
         if(!new_Node)
             return RLE_LIST_OUT_OF_MEMORY;
-        last->next=new_Node;
+        new_Node->next=l->next;
+        l->next=new_Node;
         new_Node->letter=value;
         (new_Node->size)++;
     }
@@ -109,12 +113,20 @@ char RLEListGet(RLEList list, int index, RLEListResult *result)
 {
     char value=0;
     if(!list)
-        *result = RLE_LIST_NULL_ARGUMENT;
+    {
+        if(result!=NULL)
+            *result = RLE_LIST_NULL_ARGUMENT;
+    }
     else if(index < 0 || index >= RLEListSize(list))
-        *result = RLE_LIST_INDEX_OUT_OF_BOUNDS;
+    {
+        if(result!=NULL)
+            *result = RLE_LIST_INDEX_OUT_OF_BOUNDS;
+    }
+        
     else
     {
-        *result = LIST_SUCCESS
+        if(result!=NULL)
+            *result = RLE_LIST_SUCCESS;
         int curr_index = -1;
         RLEList temp = list;
         while((curr_index + temp->size) < index)
@@ -122,7 +134,7 @@ char RLEListGet(RLEList list, int index, RLEListResult *result)
             curr_index += temp->size;
             temp = temp->next;
         }
-        value=temp->letter
+        value=temp->letter;
     } 
     return value;
         
@@ -158,7 +170,7 @@ char* RLEListExportToString(RLEList list, RLEListResult* result)
             temp=temp->next;
         }
         char* str=malloc((3*count+1)*sizeof(char));//needs to be free!!!
-        if(!string)
+        if(!str)
         {
             *result=RLE_LIST_NULL_ARGUMENT;
             return NULL;
@@ -168,7 +180,7 @@ char* RLEListExportToString(RLEList list, RLEListResult* result)
             *result=RLE_LIST_SUCCESS;
             RLEList temp2=list;
             str[3*count]=0;
-            int index=0
+            int index=0;
             while(temp2->next)
             {
                 str[index]=temp2->letter;
