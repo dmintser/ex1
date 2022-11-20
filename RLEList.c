@@ -2,12 +2,16 @@
 
 RLEList last(RLEList list);
 
+
+
 struct RLEList_t
 {
     char letter;
     int size;
     struct RLEList_t* next;
 };
+
+
 
 //implement the functions here
 
@@ -19,7 +23,6 @@ RLEList RLEListCreate()
     first->letter=0;
     first->size=0;
     first->next=NULL;
-
     return first;
 }
 
@@ -38,15 +41,12 @@ RLEList last(RLEList list)
 {
     if(!list)
         return NULL;
-    if(!list->next)
-        return list;
-    RLEList last;
+    
     while(list->next)
     {
-        last=list;
         list=list->next;
     }
-    return last;
+    return list;
 
 }
 RLEListResult RLEListAppend(RLEList list, char value)
@@ -54,20 +54,22 @@ RLEListResult RLEListAppend(RLEList list, char value)
     if(list==NULL)
         return RLE_LIST_NULL_ARGUMENT;
     RLEList l = last(list);
-    if(value==(l->letter))
-        (l->size)++;
-    else
+    if(l->size==0||l->letter!=value)
     {
         RLEList new_Node = malloc(sizeof(*new_Node));
         if(!new_Node)
-            return RLE_LIST_OUT_OF_MEMORY;
+            return RLE_LIST_NULL_ARGUMENT;
+        new_Node->size=1;
+        new_Node->letter=value;
         new_Node->next=l->next;
         l->next=new_Node;
-        new_Node->letter=value;
-        (new_Node->size)++;
     }
-
-    return RLE_LIST_SUCCESS;  
+    else if(l->letter==value)
+        (l->size)++;
+    return RLE_LIST_SUCCESS;
+        
+        
+    
 }
 
 int RLEListSize(RLEList list)
