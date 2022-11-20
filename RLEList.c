@@ -183,10 +183,15 @@ char* RLEListExportToString(RLEList list, RLEListResult* result)
             RLEList temp2=list;
             str[3*count]=0;
             int index=0;
-            while(temp2->next)
+            while(temp2)
             {
+                if(temp2->size==0)
+                {
+                    temp2=temp2->next;
+                    continue;
+                }
                 str[index]=temp2->letter;
-                str[index+1]=temp2->size;
+                str[index+1]=(temp2->size)+'0';
                 str[index+2]='\n';
                 temp2=temp2->next;
                 index+=3;
