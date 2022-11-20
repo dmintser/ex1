@@ -69,15 +69,16 @@ bool basicTest(){
     ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // acbababa
     ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // acbababaa
     ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // acbababaaa
-
+    
     ASSERT_TEST(RLEListRemove(list, 1) == RLE_LIST_SUCCESS, destroy); // abababaaa
-
+    
     // check if the represented string is "abababaaa"
     const char *s = "abababaaa";
     char it;
     for(int i=0; i<RLEListSize(list); i++)
     {
         it=RLEListGet(list, i, NULL);
+       
         ASSERT_TEST(it == s[i++], destroy);
     }
     //check if the length's are equal
